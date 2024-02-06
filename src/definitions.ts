@@ -1,4 +1,4 @@
 export interface ZohoDeskPortalSDKPlugin {
   echo(options: { value: string }): Promise<{ value: string }>;
-  initializeZohoDeskPortalDashboard(): Promise<void>;
+  // setGuestUserDetails(email: any, name: any, phone: any): Promise<{ value: string }>;
 }

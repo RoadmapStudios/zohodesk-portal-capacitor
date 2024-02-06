@@ -12,10 +12,11 @@ export class ZohoDeskPortalSDKWeb
   }
   
   // Initialize Zoho Desk portal dashboard
-  async initializeZohoDeskPortalDashboard( ): Promise<void> {
-    // ZDPortalHome.initialize(MainActivity.this, "https://desk.zoho.com");
-    // ZDPortalHome.show(MainActivity.this);
-    return;
-  }
+  // async setGuestUserDetails(email: any, name: any, phone: any) {
+
+  //     RNZDPortalChat.setGuestUserDetails(email, name, phone);
+  //   return { value: 'setGuestUserDetails' };
+  // }
+  
 
 }
