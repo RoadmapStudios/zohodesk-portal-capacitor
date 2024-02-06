@@ -6,13 +6,14 @@ export class ZohoDeskPortalSDKWeb
   extends WebPlugin
   implements ZohoDeskPortalSDKPlugin
 {
-  async echo(options: { value: string }): Promise<{ value: string }> {
+  async init(options: { orgId: string, appId: string, dc: string }): Promise<{ value: string }> {
     console.log('ECHO', options);
-    return options;
+    // RNZohoDeskPortalSDK.initialise(orgId, appId, dc);
+    return { value: 'initialise' };
   }
   
   // Initialize Zoho Desk portal dashboard
-  // async setGuestUserDetails(email: any, name: any, phone: any) {
+  // async init(options: { orgId: string, appId: string, phone: string }): Promise<{ value: string }> {
 
   //     RNZDPortalChat.setGuestUserDetails(email, name, phone);
   //   return { value: 'setGuestUserDetails' };
