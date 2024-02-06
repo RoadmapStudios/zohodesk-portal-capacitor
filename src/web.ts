@@ -10,4 +10,12 @@ export class ZohoDeskPortalSDKWeb
     console.log('ECHO', options);
     return options;
   }
+  
+  // Initialize Zoho Desk portal dashboard
+  async initializeZohoDeskPortalDashboard( ): Promise<void> {
+    // ZDPortalHome.initialize(MainActivity.this, "https://desk.zoho.com");
+    // ZDPortalHome.show(MainActivity.this);
+    return;
+  }
+
 }
