@@ -19,13 +19,21 @@ import com.zoho.desk.asap.common.ZDPortalConfiguration;
 import com.zoho.desk.asap.common.utils.ZDPTheme;
 import com.zoho.desk.asap.common.utils.ZDPThemeType;
 import com.zoho.desk.asap.api.util.ZohoDeskAPIImpl;
+import com.getcapacitor.JSArray;
+import com.getcapacitor.JSObject;
+import com.getcapacitor.NativePlugin;
+import com.getcapacitor.Plugin;
+import com.getcapacitor.PluginCall;
+import com.getcapacitor.PluginMethod;
+import com.getcapacitor.annotation.CapacitorPlugin;
+import com.getcapacitor.annotation.Permission;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
 
-public class RNZohodeskPortalSDK extends ReactContextBaseJavaModule {
+public class RNZohodeskPortalSDK extends Plugin {
 
     public static final String colorPrimary = "colorPrimary";
     public static final String colorPrimaryDark = "colorPrimaryDark";
