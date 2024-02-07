@@ -1,28 +1,55 @@
+// package com.reactlibrary;
+
+// import com.facebook.react.bridge.ReactApplicationContext;
+// import com.facebook.react.bridge.ReactContextBaseJavaModule;
+// import com.facebook.react.bridge.ReactMethod;
+// import com.zoho.desk.asap.ZDPortalHome;
+// import com.zoho.desk.asap.api.ZohoDeskPortalSDK;
+// import com.zoho.desk.asap.asap_community.ZDPortalCommunity;
+
+// public class RNZDPortalCommunity extends ReactContextBaseJavaModule {
+
+//     private final ReactApplicationContext reactContext;
+
+//     public RNZDPortalCommunity(ReactApplicationContext reactContext) {
+//         super(reactContext);
+//         this.reactContext = reactContext;
+//     }
+
+//     @Override
+//     public String getName() {
+//         return "RNZDPortalCommunity";
+//     }
+
+//     @ReactMethod
+//     public void show() {
+//         ZDPortalCommunity.show(reactContext.getCurrentActivity());
+//     }
+// }
+
 package com.reactlibrary;
 
-import com.facebook.react.bridge.ReactApplicationContext;
-import com.facebook.react.bridge.ReactContextBaseJavaModule;
-import com.facebook.react.bridge.ReactMethod;
-import com.zoho.desk.asap.ZDPortalHome;
-import com.zoho.desk.asap.api.ZohoDeskPortalSDK;
+import com.getcapacitor.annotation.CapacitorPlugin;
+import com.getcapacitor.JSObject;
+import com.getcapacitor.Plugin;
+import com.getcapacitor.PluginCall;
+import com.getcapacitor.annotation.Permission;
+import com.getcapacitor.annotation.RuntimePermission;
 import com.zoho.desk.asap.asap_community.ZDPortalCommunity;
 
-public class RNZDPortalCommunity extends ReactContextBaseJavaModule {
+@CapacitorPlugin(name = "RNZDPortalCommunity")
+@RuntimePermission
+public class RNZDPortalCommunity extends Plugin {
 
-    private final ReactApplicationContext reactContext;
-
-    public RNZDPortalCommunity(ReactApplicationContext reactContext) {
-        super(reactContext);
-        this.reactContext = reactContext;
-    }
-
-    @Override
-    public String getName() {
-        return "RNZDPortalCommunity";
-    }
-
-    @ReactMethod
-    public void show() {
-        ZDPortalCommunity.show(reactContext.getCurrentActivity());
+    @PluginMethod
+    public void show(PluginCall call) {
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                ZDPortalCommunity.show(getContext());
+                call.resolve();
+            }
+        });
     }
 }
+
