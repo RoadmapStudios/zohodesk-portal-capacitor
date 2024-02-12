@@ -336,6 +336,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Looper;
+import com.getcapacitor.annotation.CapacitorPlugin;
 
 import com.getcapacitor.JSObject;
 import com.getcapacitor.Plugin;
@@ -347,7 +348,7 @@ import com.zoho.desk.asap.common.ZDPortalConfiguration;
 import com.zoho.desk.asap.common.utils.ZDPTheme;
 import com.zoho.desk.asap.common.utils.ZDPThemeType;
 
-@CapacitorPlugin(name = "RNZohoDeskPortalSDK")
+@CapacitorPlugin
 public class RNZohodeskPortalSDK extends Plugin {
 
     private static final String PREF_NAME = "RNZohoDeskASAP";
@@ -363,7 +364,7 @@ public class RNZohodeskPortalSDK extends Plugin {
     public void initialise(PluginCall call) {
         String orgId = call.getString("orgId");
         String appId = call.getString("appId");
-        String dcStr = call.getString("dcStr");
+        String dcStr = call.getString("dc");
 
         if (orgId == null || appId == null || dcStr == null) {
             call.reject("orgId, appId, and dcStr must not be null");
