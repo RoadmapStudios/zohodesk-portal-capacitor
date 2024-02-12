@@ -11,6 +11,7 @@ buildscript {
 }
 
 android {
+    namespace "com.reactlibrary"
     compileSdkVersion 32
 
     defaultConfig {
@@ -26,9 +27,20 @@ android {
 
 repositories {
     mavenCentral()
+       maven {
+
+            url "https://maven.zohodl.com/"
+
+        }
+
+        maven {
+
+            url "https://downloads.zohocdn.com/wmslibrary"
+
+        }
 }
 
 dependencies {
-    implementation 'com.facebook.react:react-native:+'
     implementation 'com.zoho.desk:asapsdk:3.0_BETA_17'
+    implementation project(path: ':capacitor-android')
 }
