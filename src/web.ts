@@ -24,6 +24,11 @@ export class ZohoDeskPortalSDKWeb
     console.log("signin", true);
     return { signedIn: true }
   }
+
+  async logout(): Promise<{ message: string; }> {
+    console.log("logging out", false);
+    return { message: 'logged out' }
+  }
 }
 
 
