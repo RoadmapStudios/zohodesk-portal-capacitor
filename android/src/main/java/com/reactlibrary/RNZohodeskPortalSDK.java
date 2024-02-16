@@ -347,7 +347,8 @@ import com.zoho.desk.asap.api.util.ZohoDeskAPIImpl;
 import com.zoho.desk.asap.common.ZDPortalConfiguration;
 import com.zoho.desk.asap.common.utils.ZDPTheme;
 import com.zoho.desk.asap.common.utils.ZDPThemeType;
-
+import com.zoho.desk.asap.api.ZDPortalCallback;
+import com.zoho.desk.asap.api.ZDPortalException;
 @CapacitorPlugin
 public class RNZohodeskPortalSDK extends Plugin {
 
@@ -355,7 +356,6 @@ public class RNZohodeskPortalSDK extends Plugin {
     private static final String PREF_ORG_ID = "orgId";
     private static final String PREF_APP_ID = "appId";
     private static final String PREF_DC_STR = "dcStr";
-
     private static boolean isInitDone = false;
     private static ZDPThemeType themeType = ZDPThemeType.SYSTEM;
     private static ZDPTheme themeObj = null;
@@ -414,4 +414,67 @@ public class RNZohodeskPortalSDK extends Plugin {
             ZDPortalConfiguration.setThemeBuilder(themeObj);
         }
     }
+
+    @PluginMethod
+    public void setUserToken(PluginCall call) {
+        String userToken = call.getString("userToken");
+        Context context = getContext();
+
+        if (context != null) {
+            handleLogin(context, userToken, call,false);
+        } else {
+            call.reject("Failed to get context.");
+        }
+    }
+    @PluginMethod
+    public void setJWTToken(PluginCall call) {
+        String jwtToken = call.getString("jwtToken");
+        Context context = getContext();
+
+        if (context != null) {
+            handleLogin(context, jwtToken, call,true);
+        } else {
+            call.reject("Failed to get context.");
+        }
+    }
+
+    @PluginMethod
+    public void isUserSignedIn(PluginCall call) {
+        Context context = getContext();
+
+        if (context != null) {
+            ZohoDeskPortalSDK deskPortalSDK = ZohoDeskPortalSDK.getInstance(context);
+            boolean isSignedIn = deskPortalSDK.isUserSignedIn();
+            JSObject result = new JSObject();
+            result.put("signedIn", isSignedIn);
+            call.resolve(result);
+        } else {
+            call.reject("Failed to get context.");
+        }
+    }
+
+    private void handleLogin(Context context, String token, final PluginCall call,boolean isJWTToken) {
+    ZohoDeskPortalSDK deskPortalSDK = ZohoDeskPortalSDK.getInstance(context);
+    
+    ZDPortalCallback.SetUserCallback callback = new ZDPortalCallback.SetUserCallback() {
+        
+        public void onUserSetSuccess() {
+            JSObject result = new JSObject();
+            result.put("message", "User set Success");
+            call.resolve(result);
+        }
+
+        
+        public void onException(ZDPortalException e) {
+            call.reject("User set Failure");
+        }
+    };
+
+    if (isJWTToken) {
+        deskPortalSDK.loginWithJWTToken(token, callback);
+    } else {
+        deskPortalSDK.loginWithUserToken(token, callback);
+    }
+    }
+
 }
