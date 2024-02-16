@@ -477,4 +477,24 @@ public class RNZohodeskPortalSDK extends Plugin {
     }
     }
 
+    @PluginMethod
+    public void logout(PluginCall call) {
+    if (getContext() != null) {
+        ZohoDeskPortalSDK deskPortalSDK = ZohoDeskPortalSDK.getInstance(getContext());
+        deskPortalSDK.logout(new ZDPortalCallback.LogoutCallback() {
+            public void onLogoutSuccess() {
+                JSObject result = new JSObject();
+                result.put("message", "Logout Success");
+                call.resolve(result);
+            }
+
+            public void onException(ZDPortalException e) {
+                call.reject("Logout Failure");
+            }
+        });
+    } else {
+        call.reject("Failed to get context.");
+    }
+  }
+
 }
