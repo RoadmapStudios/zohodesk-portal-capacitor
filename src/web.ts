@@ -2,32 +2,29 @@ import { WebPlugin } from '@capacitor/core';
 
 import type { ZohoDeskPortalSDKPlugin } from './definitions';
 
-declare interface ZohoDeskPortal {
-  init(orgId: string, appId: string, dc: string): Promise<{ value: string }>;
-}
-declare let ZDPortal: ZohoDeskPortal;
-declare global {
-  interface Window {
-    zdAsyncInit: () => void;
-  }
-}
 
 export class ZohoDeskPortalSDKWeb
   extends WebPlugin
-  implements ZohoDeskPortalSDKPlugin
-{
-  async initialise(options: { orgId: string, appId: string, dc: string }): Promise<{ value: string }> {
-    console.log('ECHO', options);
-    return ZDPortal.init(options.orgId, options.appId, options.dc);
+  implements ZohoDeskPortalSDKPlugin {
+
+  async initialise(options: { orgId: string; appId: string; dc: string; }): Promise<{ value: string }> {
+    console.log('intializing with options', options);
+    return { value: 'initialisation done' }
   }
 
-  
-  // Initialize Zoho Desk portal dashboard
-  // async init(options: { orgId: string, appId: string, phone: string }): Promise<{ value: string }> {
+  async setUserToken(options: { userToken: string; }): Promise<void> {
+    console.log('set User token', options);
+  }
 
-  //     RNZDPortalChat.setGuestUserDetails(email, name, phone);
-  //   return { value: 'setGuestUserDetails' };
-  // }
-  
+  async setJWTToken(options: { jwtToken: string; }): Promise<void> {
+    console.log('set jwt token', options);
+  }
 
+  async isUserSignedIn(): Promise<{ signedIn: boolean }> {
+    console.log("signin", true);
+    return { signedIn: true }
+  }
 }
+
+
+
