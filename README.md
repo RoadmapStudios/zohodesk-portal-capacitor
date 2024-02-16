@@ -7,19 +7,20 @@ Enable Zoho Desk ASAP and Zoho Chat for Angular Capacitor apps
 ```bash
 npm install zohodesk-portal-capacitor
 npx cap sync
-```
+`
 ## Setup for Android
 
 -  In android/app/src/main/AndroidManifest.xml Add the following :
-Manifest Tag : xmlns:tools="http://schemas.android.com/tools"
-Application Tag : tools:replace="android:allowBackup"
+1. Manifest Tag : xmlns:tools="http://schemas.android.com/tools"
+2. Application Tag : tools:replace="android:allowBackup"
 
 -  In gradle.properties Add the following :
 android.enableJetifier=true
 
 -  In android/app/build.gradle Add the following :
-In repositories : maven { url 'https://maven.zohodl.com' }
-                  maven { url "https://downloads.zohocdn.com/wmslibrary" }
+In repositories :
+1.  maven { url 'https://maven.zohodl.com' }
+2.  maven { url "https://downloads.zohocdn.com/wmslibrary" }
 
 ## API
 
