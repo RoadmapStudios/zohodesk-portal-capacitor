@@ -10,14 +10,14 @@ npx cap sync
 ```
 ## Setup for Android
 
-- 1. In android/app/src/main/AndroidManifest.xml Add the following :
+-  In android/app/src/main/AndroidManifest.xml Add the following :
 Manifest Tag : xmlns:tools="http://schemas.android.com/tools"
 Application Tag : tools:replace="android:allowBackup"
 
-- 2. In gradle.properties Add the following :
+-  In gradle.properties Add the following :
 android.enableJetifier=true
 
-- 3. In android/app/build.gradle Add the following :
+-  In android/app/build.gradle Add the following :
 In repositories : maven { url 'https://maven.zohodl.com' }
                   maven { url "https://downloads.zohocdn.com/wmslibrary" }
 
