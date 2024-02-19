@@ -29,7 +29,9 @@ export class ZohoDeskPortalSDKWeb
     console.log("logging out", false);
     return { message: 'logged out' }
   }
-
+  async setFirebaseId(options: { firebaseId: string; }): Promise<void> {
+    console.log('set firebase id', options);
+  }
   async enablePush(): Promise<void> {
     console.log("enabling push");
   }
