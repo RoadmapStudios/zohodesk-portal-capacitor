@@ -7,4 +7,9 @@ export interface ZohoDeskPortalSDKPlugin {
   setFirebaseId(options: { firebaseId: string }): Promise<void>;
   enablePush(): Promise<void>;
   disablePush(): Promise<void>;
+  handleNotification(options: { extras: any, icon: number }): Promise<void>;
+  setThemeType(options: { type: number }): Promise<void>;
+  setThemeBuilder(options: { themeColors: { [key: string]: string }, isDarkTheme: boolean }): Promise<void>;
+  enableLogs(): Promise<void>;
+  disableLogs(): Promise<void>;
 }
