@@ -39,6 +39,26 @@ export class ZohoDeskPortalSDKWeb
   async disablePush(): Promise<void> {
     console.log("disabling push");
   }
+
+  async handleNotification(options: { extras: any; icon: number; }): Promise<void> {
+    console.log("handling notification", options);
+  }
+
+  async setThemeType(options: { type: number; }): Promise<void> {
+    console.log("setting theme type", options);
+  }
+
+  async setThemeBuilder(options: { themeColors: { [key: string]: string; }; isDarkTheme: boolean; }): Promise<void> {
+    console.log("setting theme builder", options);
+  }
+
+  async enableLogs(): Promise<void> {
+    console.log("enabling logs");
+  }
+
+  async disableLogs(): Promise<void> {
+    console.log("disabling logs");
+  }
 }
 
 
