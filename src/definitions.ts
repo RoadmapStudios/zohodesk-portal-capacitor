@@ -4,4 +4,6 @@ export interface ZohoDeskPortalSDKPlugin {
   setJWTToken(options: { jwtToken: string }): Promise<void>;
   isUserSignedIn(): Promise<{ signedIn: boolean }>;
   logout(): Promise<{ message: string }>;
+  enablePush(): Promise<void>;
+  disablePush(): Promise<void>;
 }
