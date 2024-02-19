@@ -4,6 +4,7 @@ export interface ZohoDeskPortalSDKPlugin {
   setJWTToken(options: { jwtToken: string }): Promise<void>;
   isUserSignedIn(): Promise<{ signedIn: boolean }>;
   logout(): Promise<{ message: string }>;
+  setFirebaseId(options: { firebaseId: string }): Promise<void>;
   enablePush(): Promise<void>;
   disablePush(): Promise<void>;
 }
