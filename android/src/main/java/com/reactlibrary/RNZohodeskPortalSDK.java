@@ -32,7 +32,6 @@
 // import java.util.Map;
 // import java.util.Set;
 
-
 // public class RNZohodeskPortalSDK extends Plugin {
 
 //     public static final String colorPrimary = "colorPrimary";
@@ -120,7 +119,7 @@
 //             handleLogin(getCurrentActivity().getApplicationContext(), userToken, successCallback, errorCallback, false);
 //         }
 //     }
-    
+
 //     @ReactMethod
 //     public void setJWTToken(final String userToken, final Callback successCallback, final Callback errorCallback) {
 //         if(getCurrentActivity() != null) {
@@ -325,7 +324,7 @@
 //                     } else {
 //                         deskPortalSDK.loginWithUserToken(token, callback);
 //                     }
-                    
+
 //                 }
 //             });
 //     }
@@ -349,6 +348,7 @@ import com.zoho.desk.asap.common.utils.ZDPTheme;
 import com.zoho.desk.asap.common.utils.ZDPThemeType;
 import com.zoho.desk.asap.api.ZDPortalCallback;
 import com.zoho.desk.asap.api.ZDPortalException;
+
 @CapacitorPlugin
 public class RNZohodeskPortalSDK extends Plugin {
 
@@ -359,6 +359,7 @@ public class RNZohodeskPortalSDK extends Plugin {
     private static boolean isInitDone = false;
     private static ZDPThemeType themeType = ZDPThemeType.SYSTEM;
     private static ZDPTheme themeObj = null;
+    private static String firebaseInstanceId;
 
     @PluginMethod
     public void initialise(PluginCall call) {
@@ -421,18 +422,19 @@ public class RNZohodeskPortalSDK extends Plugin {
         Context context = getContext();
 
         if (context != null) {
-            handleLogin(context, userToken, call,false);
+            handleLogin(context, userToken, call, false);
         } else {
             call.reject("Failed to get context.");
         }
     }
+
     @PluginMethod
     public void setJWTToken(PluginCall call) {
         String jwtToken = call.getString("jwtToken");
         Context context = getContext();
 
         if (context != null) {
-            handleLogin(context, jwtToken, call,true);
+            handleLogin(context, jwtToken, call, true);
         } else {
             call.reject("Failed to get context.");
         }
@@ -453,48 +455,91 @@ public class RNZohodeskPortalSDK extends Plugin {
         }
     }
 
-    private void handleLogin(Context context, String token, final PluginCall call,boolean isJWTToken) {
-    ZohoDeskPortalSDK deskPortalSDK = ZohoDeskPortalSDK.getInstance(context);
-    
-    ZDPortalCallback.SetUserCallback callback = new ZDPortalCallback.SetUserCallback() {
-        
-        public void onUserSetSuccess() {
-            JSObject result = new JSObject();
-            result.put("message", "User set Success");
-            call.resolve(result);
-        }
+    private void handleLogin(Context context, String token, final PluginCall call, boolean isJWTToken) {
+        ZohoDeskPortalSDK deskPortalSDK = ZohoDeskPortalSDK.getInstance(context);
 
-        
-        public void onException(ZDPortalException e) {
-            call.reject("User set Failure");
-        }
-    };
+        ZDPortalCallback.SetUserCallback callback = new ZDPortalCallback.SetUserCallback() {
 
-    if (isJWTToken) {
-        deskPortalSDK.loginWithJWTToken(token, callback);
-    } else {
-        deskPortalSDK.loginWithUserToken(token, callback);
-    }
-    }
-
-    @PluginMethod
-    public void logout(PluginCall call) {
-    if (getContext() != null) {
-        ZohoDeskPortalSDK deskPortalSDK = ZohoDeskPortalSDK.getInstance(getContext());
-        deskPortalSDK.logout(new ZDPortalCallback.LogoutCallback() {
-            public void onLogoutSuccess() {
+            public void onUserSetSuccess() {
                 JSObject result = new JSObject();
-                result.put("message", "Logout Success");
+                result.put("message", "User set Success");
                 call.resolve(result);
             }
 
             public void onException(ZDPortalException e) {
-                call.reject("Logout Failure");
+                call.reject("User set Failure");
             }
-        });
-    } else {
-        call.reject("Failed to get context.");
+        };
+
+        if (isJWTToken) {
+            deskPortalSDK.loginWithJWTToken(token, callback);
+        } else {
+            deskPortalSDK.loginWithUserToken(token, callback);
+        }
     }
-  }
+
+    @PluginMethod
+    public void logout(PluginCall call) {
+        if (getContext() != null) {
+            ZohoDeskPortalSDK deskPortalSDK = ZohoDeskPortalSDK.getInstance(getContext());
+            deskPortalSDK.logout(new ZDPortalCallback.LogoutCallback() {
+                public void onLogoutSuccess() {
+                    JSObject result = new JSObject();
+                    result.put("message", "Logout Success");
+                    call.resolve(result);
+                }
+
+                public void onException(ZDPortalException e) {
+                    call.reject("Logout Failure");
+                }
+            });
+        } else {
+            call.reject("Failed to get context.");
+        }
+    }
+
+    @PluginMethod
+    public void enablePush(PluginCall call) {
+        if (firebaseInstanceId != null && getActivity() != null) {
+            getActivity().runOnUiThread(new Runnable() {
+
+                public void run() {
+                    ZohoDeskPortalSDK deskPortalSDK = ZohoDeskPortalSDK
+                            .getInstance(getActivity().getApplicationContext());
+                    deskPortalSDK.enablePush(firebaseInstanceId);
+                }
+            });
+            call.resolve();
+        } else {
+            call.reject("FirebaseInstanceId is empty or activity is null");
+        }
+    }
+
+    @PluginMethod
+    public void disablePush(PluginCall call) {
+        if (firebaseInstanceId != null && getActivity() != null) {
+            getActivity().runOnUiThread(new Runnable() {
+                public void run() {
+                    ZohoDeskPortalSDK deskPortalSDK = ZohoDeskPortalSDK
+                            .getInstance(getActivity().getApplicationContext());
+                    deskPortalSDK.disablePush(firebaseInstanceId);
+                }
+            });
+            call.resolve();
+        } else {
+            call.reject("FirebaseInstanceId is empty or activity is null");
+        }
+    }
+
+    @PluginMethod
+    public void setFirebaseId(PluginCall call) {
+        String firebaseId = call.getString("firebaseId");
+        if (firebaseId != null) {
+            firebaseInstanceId = firebaseId;
+            call.resolve();
+        } else {
+            call.reject("FirebaseInstanceId cannot be null");
+        }
+    }
 
 }
