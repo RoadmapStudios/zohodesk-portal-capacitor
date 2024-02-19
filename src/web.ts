@@ -29,6 +29,14 @@ export class ZohoDeskPortalSDKWeb
     console.log("logging out", false);
     return { message: 'logged out' }
   }
+
+  async enablePush(): Promise<void> {
+    console.log("enabling push");
+  }
+
+  async disablePush(): Promise<void> {
+    console.log("disabling push");
+  }
 }
 
 
