@@ -335,12 +335,14 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Looper;
-import com.getcapacitor.annotation.CapacitorPlugin;
+import android.graphics.Color;
 
+import com.getcapacitor.annotation.CapacitorPlugin;
 import com.getcapacitor.JSObject;
 import com.getcapacitor.Plugin;
 import com.getcapacitor.PluginCall;
 import com.getcapacitor.PluginMethod;
+
 import com.zoho.desk.asap.api.ZohoDeskPortalSDK;
 import com.zoho.desk.asap.api.util.ZohoDeskAPIImpl;
 import com.zoho.desk.asap.common.ZDPortalConfiguration;
@@ -349,8 +351,30 @@ import com.zoho.desk.asap.common.utils.ZDPThemeType;
 import com.zoho.desk.asap.api.ZDPortalCallback;
 import com.zoho.desk.asap.api.ZDPortalException;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
 @CapacitorPlugin
 public class RNZohodeskPortalSDK extends Plugin {
+    public static final String colorPrimary = "colorPrimary";
+    public static final String colorPrimaryDark = "colorPrimaryDark";
+    public static final String colorAccent = "colorAccent";
+    public static final String windowBackground = "windowBackground";
+    public static final String itemBackground = "itemBackground";
+    public static final String textColorPrimary = "textColorPrimary";
+    public static final String textColorSecondary = "textColorSecondary";
+    public static final String colorOnPrimary = "colorOnPrimary";
+    public static final String iconTint = "iconTint";
+    public static final String divider = "divider";
+    public static final String listSelector = "listSelector";
+    public static final String hint = "hint";
+    public static final String formFieldBorder = "formFieldBorder";
+    public static final String errorColor = "errorColor";
+
+    public static final int systemTheme = 1;
+    public static final int lightTheme = 2;
+    public static final int darkTheme = 3;
 
     private static final String PREF_NAME = "RNZohoDeskASAP";
     private static final String PREF_ORG_ID = "orgId";
@@ -540,6 +564,121 @@ public class RNZohodeskPortalSDK extends Plugin {
         } else {
             call.reject("FirebaseInstanceId cannot be null");
         }
+    }
+
+    @PluginMethod
+    public void handleNotification(PluginCall call) {
+        final Context application = getContext();
+        final Map<String, Object> extras = call.getObject("extras");
+        final int icon = call.getInt("icon");
+
+        if (isInitDone) {
+            ZDPortalConfiguration.handleNotification(application, extras, icon);
+            call.resolve(); // Resolve the plugin call
+            return;
+        }
+
+        SharedPreferences sharedPreferences = application.getSharedPreferences("RNZohoDeskASAP", 0);
+        final String orgId = sharedPreferences.getString("orgId", "");
+        final String appId = sharedPreferences.getString("appId", "");
+        final String dcStr = sharedPreferences.getString("dcStr", "");
+
+        if (orgId != null && appId != null && dcStr != null) {
+            Handler handler = new Handler(Looper.getMainLooper());
+            handler.post(new Runnable() {
+                public void run() {
+                    initialiseDesk(application, orgId, appId, dcStr);
+                    ZDPortalConfiguration.handleNotification(application, extras, icon);
+                    call.resolve(); // Resolve the plugin call
+                }
+            });
+        } else {
+            call.reject("Missing orgId or appId");
+        } // Reject the plugin call if necessary data is missing
+    }
+
+    @PluginMethod
+    public void setThemeType(PluginCall call) {
+        int type = call.getInt("type");
+
+        switch (type) {
+            case systemTheme:
+                themeType = ZDPThemeType.SYSTEM;
+                break;
+            case lightTheme:
+                themeType = ZDPThemeType.LIGHT;
+                break;
+            case darkTheme:
+                themeType = ZDPThemeType.DARK;
+                break;
+        }
+    }
+
+    @PluginMethod
+    public void setThemeBuilder(PluginCall call) {
+        HashMap<String, String> themeColors = call.getObject("themeColors");
+
+        ZDPTheme.Builder themeBuilder = new ZDPTheme.Builder(call.getBoolean("isDarkTheme"));
+
+        Set<String> keysSet = themeColors.keySet();
+        for (String key : keysSet) {
+            switch (key) {
+                case "colorPrimary":
+                    themeBuilder.setColorPrimary(Color.parseColor(themeColors.get(key)));
+                    break;
+                case "colorPrimaryDark":
+                    themeBuilder.setColorPrimaryDark(Color.parseColor(themeColors.get(key)));
+                    break;
+                case "colorAccent":
+                    themeBuilder.setColorAccent(Color.parseColor(themeColors.get(key)));
+                    break;
+                case "windowBackground":
+                    themeBuilder.setWindowBackground(Color.parseColor(themeColors.get(key)));
+                    break;
+                case "itemBackground":
+                    themeBuilder.setItemBackground(Color.parseColor(themeColors.get(key)));
+                    break;
+                case "textColorPrimary":
+                    themeBuilder.setTextColorPrimary(Color.parseColor(themeColors.get(key)));
+                    break;
+                case "textColorSecondary":
+                    themeBuilder.setTextColorSecondary(Color.parseColor(themeColors.get(key)));
+                    break;
+                case "colorOnPrimary":
+                    themeBuilder.setColorOnPrimary(Color.parseColor(themeColors.get(key)));
+                    break;
+                case "iconTint":
+                    themeBuilder.setIconTint(Color.parseColor(themeColors.get(key)));
+                    break;
+                case "divider":
+                    themeBuilder.setDividerColor(Color.parseColor(themeColors.get(key)));
+                    break;
+                case "listSelector":
+                    themeBuilder.setListSelectorColor(Color.parseColor(themeColors.get(key)));
+                    break;
+                case "hint":
+                    themeBuilder.setHintColor(Color.parseColor(themeColors.get(key)));
+                    break;
+                case "formFieldBorder":
+                    themeBuilder.setFormFieldBorder(Color.parseColor(themeColors.get(key)));
+                    break;
+                case "errorColor":
+                    themeBuilder.setErrorColor(Color.parseColor(themeColors.get(key)));
+                    break;
+            }
+        }
+
+        themeObj = themeBuilder.build();
+    }
+
+    @PluginMethod
+    public void enableLogs(PluginCall call) {
+        ZohoDeskPortalSDK.Logger.enableLogs();
+    }
+
+    @PluginMethod
+    public void disableLogs(PluginCall call) {
+        ZohoDeskPortalSDK.Logger.disableLogs();
     }
 
 }
