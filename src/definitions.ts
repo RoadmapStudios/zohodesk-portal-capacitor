@@ -13,3 +13,8 @@ export interface ZohoDeskPortalSDKPlugin {
   enableLogs(): Promise<void>;
   disableLogs(): Promise<void>;
 }
+
+export interface ZDPortalChat {
+  show(): Promise<void>;
+  setGuestUserDetails(options: { email: string, name: string, phone: string }): Promise<void>;
+}
