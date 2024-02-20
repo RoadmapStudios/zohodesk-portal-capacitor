@@ -354,6 +354,9 @@ import com.zoho.desk.asap.api.ZDPortalException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.Iterator;
+import org.json.JSONObject;
+import org.json.JSONException;
 
 @CapacitorPlugin
 public class RNZohodeskPortalSDK extends Plugin {
@@ -569,8 +572,25 @@ public class RNZohodeskPortalSDK extends Plugin {
     @PluginMethod
     public void handleNotification(PluginCall call) {
         final Context application = getContext();
-        final Map<String, Object> extras = call.getObject("extras");
         final int icon = call.getInt("icon");
+        final JSONObject extrasJson = call.getObject("extras");
+
+        // Create a HashMap to store the converted extras
+        final Map<String, Object> extras = new HashMap<>();
+
+        try {
+            // If extrasJson is not null, convert it to a Map
+            if (extrasJson != null) {
+                Iterator<String> keys = extrasJson.keys();
+                while (keys.hasNext()) {
+                    String key = keys.next();
+                    Object value = extrasJson.get(key);
+                    extras.put(key, value);
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
         if (isInitDone) {
             ZDPortalConfiguration.handleNotification(application, extras, icon);
@@ -616,8 +636,18 @@ public class RNZohodeskPortalSDK extends Plugin {
 
     @PluginMethod
     public void setThemeBuilder(PluginCall call) {
-        HashMap<String, String> themeColors = call.getObject("themeColors");
+        JSObject themeColorsObject = call.getObject("themeColors");
+        HashMap<String, String> themeColors = new HashMap<>();
 
+        if (themeColorsObject != null) {
+            Iterator<String> keys = themeColorsObject.keys();
+
+            while (keys.hasNext()) {
+                String key = keys.next();
+                String value = themeColorsObject.getString(key);
+                themeColors.put(key, value);
+            }
+        }
         ZDPTheme.Builder themeBuilder = new ZDPTheme.Builder(call.getBoolean("isDarkTheme"));
 
         Set<String> keysSet = themeColors.keySet();
