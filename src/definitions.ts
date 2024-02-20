@@ -22,3 +22,7 @@ export interface ZDPortalChat {
 export interface ZDPortalCommunity {
   show(): Promise<void>;
 }
+
+export interface ZDPortalHome {
+  show(): Promise<void>;
+}
