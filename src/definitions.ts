@@ -18,3 +18,7 @@ export interface ZDPortalChat {
   show(): Promise<void>;
   setGuestUserDetails(options: { email: string, name: string, phone: string }): Promise<void>;
 }
+
+export interface ZDPortalCommunity {
+  show(): Promise<void>;
+}
