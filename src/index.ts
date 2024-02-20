@@ -1,6 +1,6 @@
 import { registerPlugin } from '@capacitor/core';
 
-import type { ZohoDeskPortalSDKPlugin, ZDPortalChat, ZDPortalCommunity } from './definitions';
+import type { ZohoDeskPortalSDKPlugin, ZDPortalChat, ZDPortalCommunity, ZDPortalHome } from './definitions';
 
 const ZohodeskPortalSDK = registerPlugin<ZohoDeskPortalSDKPlugin>(
   'ZohodeskPortalSDK',
@@ -15,6 +15,10 @@ const ZohoDeskPortalChat = registerPlugin<ZDPortalChat>(
 
 const ZohoDeskPortalCommunity = registerPlugin<ZDPortalCommunity>(
   'ZDPortalCommunity'
+);
+
+const ZohoDeskPortalHome = registerPlugin<ZDPortalHome>(
+  'ZDPortalHome'
 )
 export * from './definitions';
-export { ZohodeskPortalSDK, ZohoDeskPortalChat, ZohoDeskPortalCommunity };
+export { ZohodeskPortalSDK, ZohoDeskPortalChat, ZohoDeskPortalCommunity, ZohoDeskPortalHome };
