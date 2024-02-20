@@ -1,6 +1,5 @@
 // package com.reactlibrary;
 
-
 // import android.os.Handler;
 // import android.os.Looper;
 
@@ -49,22 +48,24 @@ import android.content.Context;
 
 import com.getcapacitor.JSObject;
 import com.getcapacitor.Plugin;
+import com.getcapacitor.PluginCall;
+import com.getcapacitor.PluginMethod;
 import com.getcapacitor.annotation.CapacitorPlugin;
 import com.zoho.desk.chat.ZDPortalChat;
 import com.zoho.desk.chat.ZDPortalChatUser;
 
-@CapacitorPlugin(name = "RNZDPortalChat")
-public class RNZDPortalChat extends Plugin {
-    
+@CapacitorPlugin(name = "ZDPortalChat")
+public class ZDPortalChat extends Plugin {
+
     @PluginMethod
     public void show(PluginCall call) {
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                ZDPortalChat.show(getContext());
-                call.resolve();
+                ZDPortalChat.show(getActivity());
             }
         });
+        call.resolve();
     }
 
     @PluginMethod
