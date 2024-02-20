@@ -26,3 +26,11 @@ export interface ZDPortalCommunity {
 export interface ZDPortalHome {
   show(): Promise<void>;
 }
+
+export interface ZDPortalKB {
+  show(): Promise<void>;
+}
+
+export interface ZDPortalLiveChat {
+  show(): Promise<void>;
+}
