@@ -1,6 +1,6 @@
 import { registerPlugin } from '@capacitor/core';
 
-import type { ZohoDeskPortalSDKPlugin, ZDPortalChat, ZDPortalCommunity, ZDPortalHome, ZDPortalKB, ZDPortalLiveChat } from './definitions';
+import type { ZohoDeskPortalSDKPlugin, ZDPortalChat, ZDPortalCommunity, ZDPortalHome, ZDPortalKB, ZDPortalLiveChat, ZDPortalSubmitTicket } from './definitions';
 
 const ZohodeskPortalSDK = registerPlugin<ZohoDeskPortalSDKPlugin>(
   'ZohodeskPortalSDK',
@@ -27,6 +27,10 @@ const ZohoDeskPortalKB = registerPlugin<ZDPortalKB>(
 
 const ZohoDeskPortalLiveChat = registerPlugin<ZDPortalLiveChat>(
   'ZDPortalLiveChat'
+);
+
+const ZohoDeskPortalSubmitTicket = registerPlugin<ZDPortalSubmitTicket>(
+  'ZDPortalSubmitTicket'
 )
 export * from './definitions';
-export { ZohodeskPortalSDK, ZohoDeskPortalChat, ZohoDeskPortalCommunity, ZohoDeskPortalHome, ZohoDeskPortalKB, ZohoDeskPortalLiveChat };
+export { ZohodeskPortalSDK, ZohoDeskPortalChat, ZohoDeskPortalCommunity, ZohoDeskPortalHome, ZohoDeskPortalKB, ZohoDeskPortalLiveChat, ZohoDeskPortalSubmitTicket };
