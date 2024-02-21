@@ -34,3 +34,7 @@ export interface ZDPortalKB {
 export interface ZDPortalLiveChat {
   show(): Promise<void>;
 }
+
+export interface ZDPortalSubmitTicket {
+  show(): Promise<void>;
+}
