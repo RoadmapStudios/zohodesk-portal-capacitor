@@ -35,6 +35,9 @@ export interface ZDPortalLiveChat {
   show(): Promise<void>;
 }
 
+export interface ZDPortalTickets {
+  show(): Promise<void>;
+}
 export interface ZDPortalSubmitTicket {
   show(): Promise<void>;
 }
