@@ -336,7 +336,7 @@ import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Looper;
 import android.graphics.Color;
-
+import android.util.Log;
 import com.getcapacitor.annotation.CapacitorPlugin;
 import com.getcapacitor.JSObject;
 import com.getcapacitor.Plugin;
@@ -390,56 +390,69 @@ public class ZohodeskPortalSDK extends Plugin {
 
     @PluginMethod
     public void initialise(PluginCall call) {
-        String orgId = call.getString("orgId");
-        String appId = call.getString("appId");
-        String dcStr = call.getString("dc");
+        try {
+            String orgId = call.getString("orgId");
+            String appId = call.getString("appId");
+            String dcStr = call.getString("dc");
 
-        if (orgId == null || appId == null || dcStr == null) {
-            call.reject("orgId, appId, and dcStr must not be null");
-            return;
+            if (orgId == null || appId == null || dcStr == null) {
+                Log.e("RNZohodeskPortalSDK", "orgId, appId, and dcStr must not be null");
+                call.reject("orgId, appId, and dcStr must not be null");
+                return;
+            }
+
+            Context context = getContext();
+            Log.d("RNZohodeskPortalSDK", "Context found: " + context);
+
+            if (context == null) {
+                Log.e("RNZohodeskPortalSDK", "Unable to get context");
+                call.reject("Unable to get context");
+                return;
+            }
+
+            initialiseDesk(context, orgId, appId, dcStr);
+            call.resolve();
+        } catch (Exception e) {
+            Log.e("RNZohodeskPortalSDK", "Error initializing plugin: " + e.getMessage());
+            call.reject("Error initializing plugin");
         }
-
-        Context context = getContext();
-        if (context == null) {
-            call.reject("Unable to get context");
-            return;
-        }
-
-        initialiseDesk(context, orgId, appId, dcStr);
-        call.resolve();
     }
 
     private void initialiseDesk(Context context, String orgId, String appId, String dcStr) {
-        isInitDone = true;
-        SharedPreferences preferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putString(PREF_ORG_ID, orgId);
-        editor.putString(PREF_APP_ID, appId);
-        editor.putString(PREF_DC_STR, dcStr);
-        editor.apply();
+        try {
+            isInitDone = true;
 
-        ZohoDeskPortalSDK portalSDK = ZohoDeskPortalSDK.getInstance(context);
-        ZohoDeskAPIImpl.setRefererHeader("react-native");
+            SharedPreferences preferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putString(PREF_ORG_ID, orgId);
+            editor.putString(PREF_APP_ID, appId);
+            editor.putString(PREF_DC_STR, dcStr);
+            editor.apply();
 
-        ZohoDeskPortalSDK.DataCenter dc = ZohoDeskPortalSDK.DataCenter.US;
-        switch (dcStr.toLowerCase()) {
-            case "eu":
-                dc = ZohoDeskPortalSDK.DataCenter.EU;
-                break;
-            case "cn":
-                dc = ZohoDeskPortalSDK.DataCenter.CN;
-                break;
-            case "in":
-                dc = ZohoDeskPortalSDK.DataCenter.IN;
-                break;
-            case "au":
-                dc = ZohoDeskPortalSDK.DataCenter.AU;
-                break;
-        }
-        portalSDK.initDesk(Long.valueOf(orgId), appId, dc);
-        ZDPortalConfiguration.setThemeType(themeType);
-        if (themeObj != null) {
-            ZDPortalConfiguration.setThemeBuilder(themeObj);
+            ZohoDeskPortalSDK portalSDK = ZohoDeskPortalSDK.getInstance(context);
+            ZohoDeskAPIImpl.setRefererHeader("react-native");
+            ZohoDeskPortalSDK.DataCenter dc = ZohoDeskPortalSDK.DataCenter.US;
+            switch (dcStr.toLowerCase()) {
+                case "eu":
+                    dc = ZohoDeskPortalSDK.DataCenter.EU;
+                    break;
+                case "cn":
+                    dc = ZohoDeskPortalSDK.DataCenter.CN;
+                    break;
+                case "in":
+                    dc = ZohoDeskPortalSDK.DataCenter.IN;
+                    break;
+                case "au":
+                    dc = ZohoDeskPortalSDK.DataCenter.AU;
+                    break;
+            }
+            portalSDK.initDesk(Long.valueOf(orgId), appId, dc);
+            ZDPortalConfiguration.setThemeType(themeType);
+            if (themeObj != null) {
+                ZDPortalConfiguration.setThemeBuilder(themeObj);
+            }
+        } catch (Exception e) {
+            Log.e("RNZohodeskPortalSDK", "Error initializing ZohoDeskPortalSDK: " + e.getMessage());
         }
     }
 
